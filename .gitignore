@@ -10,6 +10,6 @@ __pycache__/
 
 
 # Environments
-.env
+env/
 
 *.pyc
