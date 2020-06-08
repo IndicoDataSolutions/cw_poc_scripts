@@ -2,7 +2,9 @@ import fitz
 import os
 import click
 import click_pathlib
+from tqdm import tqdm
 
+from utils import files_from_directory
 
 def extract_images_from_file(pdf_filepath, dst_folder):
     """
@@ -37,16 +39,26 @@ def extract_images_from_file(pdf_filepath, dst_folder):
                 continue
 
 
-@click.command()
-@click.argument('filepath', type=click_pathlib.Path(exists=True))
-@click.argument('dst_folder')
-def main(filepath: str, dst_folder: str):
+def image_extraction_driver(src_dir: str, dst_folder: str):
     """
     Script to run pdf extraction on src_folder and save extraction
     output to dst_folder.
     """
-    extract_images_from_file(filepath, dst_folder)
+    pdf_paths = files_from_directory(src_dir)
+    for pdf_path in tqdm(pdf_paths):
+        extract_images_from_file(pdf_path, dst_folder)
     print("Generated image extractions")
+
+
+@click.command()
+@click.argument('src_dir', type=click_pathlib.Path(exists=True))
+@click.argument('dst_folder')
+def main(src_dir: str, dst_folder: str):
+    """
+    Script to run pdf extraction on src_folder and save extraction
+    output to dst_folder.
+    """
+    image_extraction_driver(src_dir, dst_folder)
 
 
 if __name__ == '__main__':
