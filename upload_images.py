@@ -41,8 +41,8 @@ def image_upload_driver(src_dir):
 
     for filepath in tqdm(filepaths):
         storage_path = upload_to_indico_storage(filepath)
-        uploads['Filename'] = os.path.basename(filepath)
-        uploads['Storage Location'] = storage_path
+        uploads['Filename'].append(os.path.basename(filepath))
+        uploads['Storage Location'].append(storage_path)
 
     # save file to storage path mapping
     output_filename = 'image_storage_map.csv'

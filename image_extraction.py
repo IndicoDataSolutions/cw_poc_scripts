@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from utils import files_from_directory
 
+
 def extract_images_from_file(pdf_filepath, dst_folder):
     """
     Use PyMuPDF to extract all images from a PDF file and save to dst_folder
