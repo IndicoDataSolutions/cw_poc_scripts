@@ -5,11 +5,14 @@ import os
 import json
 import click
 import click_pathlib
+from tqdm import tqdm
 
 from config import PROD_CLIENT, detailed_pdf_extraction_config
 
 from indico.queries.documents import DocumentExtraction
 from indico.queries import JobStatus, RetrieveStorageObject
+
+from utils import files_from_directory
 
 
 def save_extraction(extraction, src_doc, dst_folder):
@@ -67,34 +70,46 @@ def pdf_extraction_call(pdf_filepath, client, config):
     return doc_extract
 
 
-def pdf_extraction_driver(src_doc, dst_folder):
+def pdf_extraction_driver(src, dst_folder):
     """
     Given a filepath, run Indico document extraction and save json output to
     dst_folder witht the same name as the src_doc
 
     Arguments:
-        filepath {str} -- path to Brochure pdf file
+        src {str} -- path to Brochure pdf file or files
         dst_folder {str} -- path to folder to save json output
 
     Returns:
         str -- output file path
 
     """
-    pdf_extraction = pdf_extraction_call(src_doc, PROD_CLIENT,
-                                         detailed_pdf_extraction_config)
-    output_filepath = save_extraction(pdf_extraction, src_doc, dst_folder)
-    return output_filepath
+    # if src is directory, iterate through all pdf files
+    if os.path.isdir(src):
+        pdf_paths = files_from_directory(src)
+        for pdf_path in tqdm(pdf_paths):
+            pdf_extraction = (
+                pdf_extraction_call(pdf_path, PROD_CLIENT,
+                                                 detailed_pdf_extraction_config
+                )
+            _ = save_extraction(pdf_extraction, pdf_path, dst_folder)
+    # otherwise pass single file
+    else:
+        pdf_extraction = (
+                pdf_extraction_call(src, PROD_CLIENT,
+                                                 detailed_pdf_extraction_config
+                )
+        _ = save_extraction(pdf_extraction, pdf_path, dst_folder)
 
 
 @click.command()
-@click.argument('filepath', type=click_pathlib.Path(exists=True))
+@click.argument('src_dir', type=click_pathlib.Path(exists=True))
 @click.argument('dst_folder')
-def main(filepath: str, dst_folder: str):
+def main(src_dir: str, dst_folder: str):
     """
     Script to run pdf extraction on src_folder and save extraction
     output to dst_folder.
     """
-    output_filepath = pdf_extraction_driver(filepath, dst_folder)
+    output_filepath = pdf_extraction_driver(src_dir, dst_folder)
     print(f"Generated pdf extraction at {output_filepath}")
 
 
