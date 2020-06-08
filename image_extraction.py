@@ -10,6 +10,7 @@ def extract_images_from_file(pdf_filepath, dst_folder):
     """
     Use PyMuPDF to extract all images from a PDF file and save to dst_folder
 
+    Code derived from: https://stackoverflow.com/questions/2693820/extract-images-from-pdf-without-resampling-in-python/47877930#47877930
     Arguments:
         filepath {str} -- path to Brochure pdf file
         dst_folder {str} -- path to folder to save png output
@@ -26,7 +27,7 @@ def extract_images_from_file(pdf_filepath, dst_folder):
             save_path = os.path.join(dst_folder, save_name)
             try:
                 pix = fitz.Pixmap(doc, xref)
-                if pix.colorspace.name != 'DeviceCMYK':       # this is GRAY or RGB
+                if pix.colorspace.name != 'DeviceCMYK':   # this is GRAY or RGB
                     pix.writePNG(save_path)
                 else:               # CMYK: convert to RGB first
                     pix = fitz.Pixmap(fitz.csRGB, pix)
