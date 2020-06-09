@@ -1,6 +1,7 @@
 """
 Script to split pdf files into single page pdf files for upload to indico
-teach
+teach.  The script will separate pdf pages and place into separate directory
+according to predicted class
 """
 
 import pandas as pd
