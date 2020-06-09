@@ -1,5 +1,11 @@
 """
-Functions to generate comparisons between ground truth and predictions
+Script to create Tenancy Schedule output. Create an excel sheet per file with
+columns: 
+Class 1 Predictions | Class 1 Confidence ....
+
+To simulate table structure, we stack predictions of the same class in read
+order.  Note, Indico offers positional information that can help maintain
+table correspondence
 """
 
 import os
