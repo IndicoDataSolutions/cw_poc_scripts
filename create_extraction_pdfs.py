@@ -29,7 +29,7 @@ for model, folder in folder_model_map.items():
     extraction_dataset_path = os.path.join(output_path, folder)
     if not os.path.exists(extraction_dataset_path):
         os.mkdir(extraction_dataset_path)
-    
+
     # filter page_classification by model type
     model_mask = page_class_df['Prediction'] == model
     model_test_df = page_class_df[model_mask]
@@ -43,6 +43,8 @@ for model, folder in folder_model_map.items():
         output_filepath = os.path.join(extraction_dataset_path, filename)
         file_df = model_test_df.loc[[filepath]]
         page_numbers = file_df['Page Number'].to_list()
+
+        # extract pdf page
         try:
             separate_pdf(pdf_filepath, output_filepath, page_numbers)
         except:
