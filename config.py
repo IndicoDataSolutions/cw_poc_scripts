@@ -12,5 +12,5 @@ indico_prod_config = IndicoConfig(
 PROD_CLIENT = IndicoClient(config=indico_prod_config)
 
 detailed_pdf_extraction_config = {
-    "preset_config": 'detailed'
+    "preset_config": 'ondocument'
 }
